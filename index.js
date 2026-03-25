@@ -9,13 +9,32 @@ import http from "http";
 import fs from "fs";
 
 const server = http.createServer((req, res) => {
-  const log = `Request Received from - ${req.rawHeaders[3]} - ${Date.now()}\n`;
+  const log = `Request Received from - ${req.rawHeaders[3]} - (${req.url}) - ${Date.now()}\n`;
   fs.appendFile("server.log", log, (err) => {
     if (err) {
       fs.appendFile("error.log", `${Date.now()} - ${err.message}`);
     }
 
-    res.end("Hello");
+    switch (req.url) {
+      case "/":
+        res.end("Landing Page");
+        break;
+      case "/home":
+        res.end("Home Page");
+        break;
+      case "/dashboard":
+        res.end("Dashboard Page");
+        break;
+      case "/about":
+        res.end("About Page");
+        break;
+      case "/contact":
+        res.end("Contact Page");
+        break;
+      default:
+        res.end("Default Page");
+        break;
+    }
   });
 });
 
