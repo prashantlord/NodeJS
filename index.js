@@ -7,17 +7,21 @@
 
 import http from "http";
 import fs from "fs";
+import url from "url";
 
 const server = http.createServer((req, res) => {
-  const log = `Request Received from - ${req.rawHeaders[3]} - (${req.url}) - ${Date.now()}\n`;
+  const parsedUrl = url.parse(req.url, true);
+  console.log(parsedUrl);
+  const log = `Request Received from - ${req.rawHeaders[3]} - (${parsedUrl.pathname}) - ${Date.now()}\n`;
   fs.appendFile("server.log", log, (err) => {
     if (err) {
       fs.appendFile("error.log", `${Date.now()} - ${err.message}`);
     }
 
-    switch (req.url) {
+    switch (parsedUrl.pathname) {
       case "/":
-        res.end("Landing Page");
+        const name = parsedUrl.query.name;
+        res.end(`Hello ${name}`);
         break;
       case "/home":
         res.end("Home Page");
