@@ -1,48 +1,15 @@
-// import * as math from "./math.js";
-// console.log(math);
-// console.log(math.add(1, 2));
-// console.log(math.sub(1, 2));
-// console.log(math.mul(1, 2));
-// console.log(math.div(1, 2));
+import express from "express";
+const app = express();
+const port = 3000;
 
-import http from "http";
-import fs from "fs";
-import url from "url";
-
-const server = http.createServer((req, res) => {
-  const parsedUrl = url.parse(req.url, true);
-  const log = `Request Received from - ${req.rawHeaders[3]} - ${req.method} - (${parsedUrl.pathname}) - ${Date.now()}\n`;
-  fs.appendFile("server.log", log, (err) => {
-    if (err) {
-      fs.appendFile("error.log", `${Date.now()} - ${err.message}`);
-    }
-
-    switch (parsedUrl.pathname) {
-      case "/":
-        const name = parsedUrl.query.name;
-        if (req.method === "GET") res.end(`Hello ${name}`);
-        if (req.method === "POST")
-          req.end(`Hello ${name}, your data has been received`);
-        break;
-      case "/home":
-        res.end("Home Page");
-        break;
-      case "/dashboard":
-        res.end("Dashboard Page");
-        break;
-      case "/about":
-        res.end("About Page");
-        break;
-      case "/contact":
-        res.end("Contact Page");
-        break;
-      default:
-        res.end("Default Page");
-        break;
-    }
-  });
+app.get("/", (req, res) => {
+  res.send(`Hello to the home page ${req.query.name}`);
 });
 
-server.listen(3000, (req, res) => {
-  console.log("Server is running");
+app.get("/about", (req, res) => {
+  res.send(`hello in the about page ${req.query.name}`);
+});
+
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
 });
