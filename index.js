@@ -10,7 +10,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
   req.name = req.search_query;
-  console.log("middleware called");
+  console.log("Middleware called");
   next();
 });
 
