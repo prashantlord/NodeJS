@@ -11,8 +11,7 @@ import url from "url";
 
 const server = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url, true);
-  console.log(parsedUrl);
-  const log = `Request Received from - ${req.rawHeaders[3]} - (${parsedUrl.pathname}) - ${Date.now()}\n`;
+  const log = `Request Received from - ${req.rawHeaders[3]} - ${req.method} - (${parsedUrl.pathname}) - ${Date.now()}\n`;
   fs.appendFile("server.log", log, (err) => {
     if (err) {
       fs.appendFile("error.log", `${Date.now()} - ${err.message}`);
@@ -21,7 +20,9 @@ const server = http.createServer((req, res) => {
     switch (parsedUrl.pathname) {
       case "/":
         const name = parsedUrl.query.name;
-        res.end(`Hello ${name}`);
+        if (req.method === "GET") res.end(`Hello ${name}`);
+        if (req.method === "POST")
+          req.end(`Hello ${name}, your data has been received`);
         break;
       case "/home":
         res.end("Home Page");
