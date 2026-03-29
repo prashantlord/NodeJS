@@ -6,6 +6,14 @@ import { json } from "stream/consumers";
 const app = express();
 const PORT = 3000;
 
+app.use(express.urlencoded({ extended: true }));
+
+app.use((req, res, next) => {
+  req.name = req.search_query;
+  console.log("middleware called");
+  next();
+});
+
 app.get("/users", (req, res) => {
   const html = `
     <ul>
@@ -15,15 +23,9 @@ app.get("/users", (req, res) => {
   res.send(html);
 });
 
-app
-  .route("/api/users/:id")
-  .get((req, res) => {
-    res.json(mockData);
-  })
-  .post((req, res) => {})
-  .put((req, res) => {})
-  .patch((req, res) => {})
-  .delete((req, res) => {});
+app.route("/api/users").get((req, res) => {
+  res.json(mockData);
+});
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
